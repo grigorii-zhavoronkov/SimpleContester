@@ -15,6 +15,7 @@ import ru.stray27.scontester.repositories.TaskRepository;
 import ru.stray27.scontester.services.FileManagementService;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/admin/api/")
 public class AdminManagementController {
 

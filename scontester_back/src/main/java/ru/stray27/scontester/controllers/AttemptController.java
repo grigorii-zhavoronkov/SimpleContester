@@ -22,6 +22,7 @@ import java.util.concurrent.Executor;
 
 @Log4j2
 @RestController
+@CrossOrigin("*")
 @RequestMapping("/attempt/")
 public class AttemptController {
 
@@ -85,13 +86,18 @@ public class AttemptController {
         try {
             Iterable<Attempt> attempts = attemptRepository.findAllOrderById().orElseThrow();
             List<AttemptOutput> outputAttempts = new ArrayList<>();
+            int attemptCounter = 0;
             for (Attempt attempt : attempts) {
-                AttemptOutput attemptOutput = new AttemptOutput();
-                attemptOutput.setId(attempt.getId());
-                attemptOutput.setAttemptStatus(attempt.getAttemptStatus());
-                attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
-                attemptOutput.setSenderName(attempt.getSender().getName());
-                outputAttempts.add(attemptOutput);
+                if (attemptCounter++ < 30) {
+                    AttemptOutput attemptOutput = new AttemptOutput();
+                    attemptOutput.setId(attempt.getId());
+                    attemptOutput.setAttemptStatus(attempt.getAttemptStatus());
+                    attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
+                    attemptOutput.setSenderName(attempt.getSender().getName());
+                    outputAttempts.add(attemptOutput);
+                } else {
+                    break;
+                }
             }
             return new ResponseEntity<>(outputAttempts, HttpStatus.OK);
         } catch (NoSuchElementException e) {

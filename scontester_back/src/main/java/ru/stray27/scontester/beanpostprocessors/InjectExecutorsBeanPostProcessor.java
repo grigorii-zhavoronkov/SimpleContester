@@ -41,6 +41,7 @@ public class InjectExecutorsBeanPostProcessor implements BeanPostProcessor {
                 Executor executorAnnotation = executor.getClass().getAnnotation(Executor.class);
                 if (executorServices.containsKey(executorAnnotation.language())) {
                     log.warn("Found duplicated executors for language " + executorAnnotation.language());
+                    log.warn(beanName + " will be used");
                 }
                 executorServices.put(executorAnnotation.language(), executor);
             }
