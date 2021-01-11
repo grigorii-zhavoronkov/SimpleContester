@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.AttemptStatus;
+import ru.stray27.scontester.entities.Test;
 import ru.stray27.scontester.services.ExecutorService;
 import ru.stray27.scontester.services.ProcessBuilderService;
 
@@ -59,7 +60,7 @@ public abstract class AbstractExecutor implements ExecutorService {
      * @param inputs - values, which should be written in STDIN
      * @return true - if exit code of process is 0, false otherwise
      */
-    protected abstract boolean runWithStdInput(String[] inputs);
+    protected abstract boolean runWithStdInput(String inputs);
 
     /**
      * Used to run your program.
@@ -68,7 +69,7 @@ public abstract class AbstractExecutor implements ExecutorService {
     protected abstract boolean runWithFileInput();
 
     @Override
-    public int execute(List<String> tests, Attempt attempt) {
+    public int execute(List<Test> tests, Attempt attempt) {
         if (preExecute(attempt) == AttemptStatus.COMPILATION_ERROR) {
             postExecute(attempt);
             attempt.setAttemptStatus(AttemptStatus.COMPILATION_ERROR);
@@ -91,16 +92,12 @@ public abstract class AbstractExecutor implements ExecutorService {
         return testsPassed;
     }
 
-    protected int runStdInTests(List<String> tests) {
+    protected int runStdInTests(List<Test> tests) {
         int testsCount = 1;
-        for (String test: tests) {
+        for (Test test: tests) {
             testsCount++;
-            String[] tokens = test.split(delimiter);
-            String[] input = tokens[0].split("\\\\n");
-            String[] output = Arrays.copyOfRange(tokens, 1, tokens.length - 1);
-            for (int i = 0; i < output.length; i++) {
-                output[i] = output[i].replaceAll("\\\\", "\\");
-            }
+            String input = test.getInput();
+            String output = test.getOutput();
             if (!runWithStdInput(input)) {
                 attemptStatus = AttemptStatus.RUNTIME_EXCEPTION;
                 return testsCount;
@@ -113,21 +110,15 @@ public abstract class AbstractExecutor implements ExecutorService {
         return testsCount;
     }
 
-    protected int runFileInputTests(List<String> tests) {
+    protected int runFileInputTests(List<Test> tests) {
         int testsCount = 0;
         createInputOutputFiles();
-        for (String test: tests) {
+        for (Test test: tests) {
             testsCount++;
-            String[] tokens = test.split(delimiter);
-            String[] input = tokens[0].split("\\\\n");
-            String[] output = Arrays.copyOfRange(tokens, 1, tokens.length - 1);
-            for (int i = 0; i < output.length; i++) {
-                output[i] = output[i].replaceAll("\\\\", "\\");
-            }
+            String input = test.getInput();
+            String output = test.getOutput();
             try (FileWriter inputWriter = new FileWriter(testDirectoryPath + "input.txt", false)) {
-                for (String in : input) {
-                    inputWriter.write(in + "\n");
-                }
+                inputWriter.write(input);
                 inputWriter.flush();
             } catch (IOException e) {
                 log.error("Can't open/write to file " + testDirectoryPath + "input.txt");
@@ -171,14 +162,8 @@ public abstract class AbstractExecutor implements ExecutorService {
         processBuilderService.startProcess("cp", source, destination);
     }
 
-    protected boolean checkOutput(String programOutput, String[] possibleOutputs) {
-        programOutput = programOutput.trim();
-        for (String possibleOutput : possibleOutputs) {
-            if (possibleOutput.equals(programOutput)) {
-                return true;
-            }
-        }
-        return false;
+    protected boolean checkOutput(String programOutput, String possibleOutput) {
+        return programOutput.trim().equals(possibleOutput.trim());
     }
 
     @Override

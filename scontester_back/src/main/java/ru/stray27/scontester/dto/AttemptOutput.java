@@ -1,4 +1,4 @@
-package ru.stray27.scontester.model;
+package ru.stray27.scontester.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

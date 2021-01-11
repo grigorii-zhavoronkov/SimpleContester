@@ -1,9 +1,10 @@
-package ru.stray27.scontester.model;
+package ru.stray27.scontester.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.stray27.scontester.entities.InputType;
+import ru.stray27.scontester.entities.Test;
 
 @Getter
 @Setter
@@ -14,5 +15,5 @@ public class TaskInput {
     private InputType inputType;
     private Integer timeLimit;
     private Integer memoryLimit;
-    private String[] tests;
+    private Test[] tests;
 }

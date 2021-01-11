@@ -8,10 +8,12 @@ import org.springframework.web.bind.annotation.*;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.Sender;
 import ru.stray27.scontester.entities.Task;
-import ru.stray27.scontester.model.TaskInput;
+import ru.stray27.scontester.dto.TaskInput;
+import ru.stray27.scontester.entities.Test;
 import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.repositories.SenderRepository;
 import ru.stray27.scontester.repositories.TaskRepository;
+import ru.stray27.scontester.repositories.TestRepository;
 import ru.stray27.scontester.services.FileManagementService;
 
 @RestController
@@ -26,7 +28,7 @@ public class AdminManagementController {
     @Autowired
     private AttemptRepository attemptRepository;
     @Autowired
-    private FileManagementService fileManagementService;
+    private TestRepository testRepository;
 
 
     @PostMapping(value = "deleteSender")
@@ -53,11 +55,14 @@ public class AdminManagementController {
         task.setInputType(taskInput.getInputType());
         task.setTimeLimit(taskInput.getTimeLimit());
         task.setMemoryLimit(taskInput.getMemoryLimit());
-        task.setTestsFile(fileManagementService.saveTestsFile(task.getTitle(), taskInput.getTests()));
-        if (task.getTestsFile() == null) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }
         taskRepository.save(task);
+        for (Test input_test : taskInput.getTests()) {
+            Test test = new Test();
+            test.setTask(task);
+            test.setInput(input_test.getInput());
+            test.setOutput(input_test.getOutput());
+            testRepository.save(test);
+        }
         return new ResponseEntity(HttpStatus.OK);
     }
 

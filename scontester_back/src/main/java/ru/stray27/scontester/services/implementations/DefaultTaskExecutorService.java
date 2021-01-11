@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.AttemptStatus;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
+import ru.stray27.scontester.entities.Test;
 import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.services.ExecutorService;
 import ru.stray27.scontester.services.annotations.InjectExecutors;
@@ -16,10 +17,7 @@ import ru.stray27.scontester.services.TaskExecutorService;
 import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 
 @Log4j2
@@ -42,7 +40,7 @@ public class DefaultTaskExecutorService implements TaskExecutorService {
     @Override
     @Async
     synchronized public CompletableFuture<Integer> runTests() {
-        List<String> tests = findTests(attempt);
+        List<Test> tests = findTests(attempt);
         ExecutorService executor = executors.get(attempt.getProgrammingLanguage());
         attempt.setAttemptStatus(AttemptStatus.RUNNING);
         attemptRepository.save(attempt);
@@ -54,19 +52,8 @@ public class DefaultTaskExecutorService implements TaskExecutorService {
         this.attempt = attempt;
     }
 
-    protected List<String> findTests(Attempt attempt) {
-        File testsDescriptionFile = new File(attempt.getTask().getTestsFile());
-        try (Scanner scanner = new Scanner(testsDescriptionFile)) {
-            List<String> tests = new ArrayList<>();
-            while (scanner.hasNextLine()) {
-                tests.add(scanner.nextLine());
-            }
-            return tests;
-        } catch (FileNotFoundException e) {
-            log.error("csv for task " + attempt.getTask().getTitle() + " isn't present. Can't run tests for task");
-            return null;
-        }
-
+    protected List<Test> findTests(Attempt attempt) {
+        return new ArrayList<>(attempt.getTask().getTests());
     }
 
     @SneakyThrows

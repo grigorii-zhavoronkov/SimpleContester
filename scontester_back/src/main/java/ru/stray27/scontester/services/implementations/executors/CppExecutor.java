@@ -44,11 +44,9 @@ public class CppExecutor extends AbstractExecutor {
     }
 
     @Override
-    protected boolean runWithStdInput(String[] inputs) {
+    protected boolean runWithStdInput(String input) {
         processBuilderService.startProcess(this.compiledFilename);
-        for (String input : inputs) {
-            processBuilderService.writeInput(input);
-        }
+        processBuilderService.writeInput(input);
         return !processBuilderService.isError();
     }
 

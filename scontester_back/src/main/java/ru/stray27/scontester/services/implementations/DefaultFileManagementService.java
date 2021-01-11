@@ -12,6 +12,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
@@ -32,15 +33,9 @@ public class DefaultFileManagementService implements FileManagementService {
     }
 
     @Override
-    public String saveSourceCodeFile(Long taskId, String uid, Long attemptId, String[] sourceCode) {
+    public String saveSourceCodeFile(Long taskId, String uid, Long attemptId, String sourceCode) {
         File file = new File(constructSourceCodeFilename(taskId, uid, attemptId));
         return writeToFile(file, sourceCode);
-    }
-
-    @Override
-    public String saveTestsFile(String title, String[] tests) {
-        File file = new File(taskDir + "task_" + title + ".csv");
-        return writeToFile(file, tests);
     }
 
     @Override
@@ -52,16 +47,13 @@ public class DefaultFileManagementService implements FileManagementService {
         }
     }
 
-    private String writeToFile(File file, String[] content) {
+    private String writeToFile(File file, String content) {
         try {
             if (!file.createNewFile()) {
                 throw new IOException("Can't create file " + file.getName());
             }
             FileWriter writer = new FileWriter(file);
-            for (String line : content) {
-                writer.write(line);
-                writer.write('\n');
-            }
+            writer.write(content);
             writer.flush();
             writer.close();
             return file.getAbsolutePath();

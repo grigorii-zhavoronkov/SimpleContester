@@ -45,11 +45,9 @@ public class FreePascalExecutor extends AbstractExecutor {
     }
 
     @Override
-    protected boolean runWithStdInput(String[] inputs) {
+    protected boolean runWithStdInput(String input) {
         processBuilderService.startProcess(compiledFilename);
-        for (String input : inputs) {
-            processBuilderService.writeInput(input);
-        }
+        processBuilderService.writeInput(input);
         return !processBuilderService.isError();
     }
 

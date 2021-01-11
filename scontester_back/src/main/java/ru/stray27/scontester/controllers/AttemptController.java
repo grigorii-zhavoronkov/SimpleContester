@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.Sender;
 import ru.stray27.scontester.entities.Task;
-import ru.stray27.scontester.model.AttemptInput;
-import ru.stray27.scontester.model.AttemptOutput;
+import ru.stray27.scontester.dto.AttemptInput;
+import ru.stray27.scontester.dto.AttemptOutput;
 import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.repositories.SenderRepository;
 import ru.stray27.scontester.repositories.TaskRepository;
@@ -72,7 +72,7 @@ public class AttemptController {
                         attemptInput.getTaskId(),
                         attemptInput.getUid(),
                         attempt.getId(),
-                        attemptInput.getSrc()
+                        attemptInput.getCode()
                 )
         );
         attemptRepository.save(attempt);

@@ -19,8 +19,6 @@ public class Task {
 
     private String description;
 
-    private String testsFile;
-
     @Enumerated(EnumType.STRING)
     private InputType inputType;
 
@@ -30,6 +28,9 @@ public class Task {
 
     @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
     private Collection<Attempt> attempts;
+
+    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    private Collection<Test> tests;
 
     @PrePersist
     private void prePersist() {

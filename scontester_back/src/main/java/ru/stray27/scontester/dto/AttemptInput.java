@@ -1,4 +1,4 @@
-package ru.stray27.scontester.model;
+package ru.stray27.scontester.dto;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,7 +10,7 @@ import ru.stray27.scontester.entities.ProgrammingLanguage;
 @NoArgsConstructor
 public class AttemptInput {
     private String uid;
-    private String[] src;
+    private String code;
     private ProgrammingLanguage programmingLanguage;
     private Long taskId;
 }
