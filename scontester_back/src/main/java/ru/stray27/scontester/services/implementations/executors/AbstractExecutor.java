@@ -70,7 +70,8 @@ public abstract class AbstractExecutor implements ExecutorService {
 
     @Override
     public int execute(List<Test> tests, Attempt attempt) {
-        if (preExecute(attempt) == AttemptStatus.COMPILATION_ERROR) {
+        attemptStatus = preExecute(attempt);
+        if (attemptStatus == AttemptStatus.COMPILATION_ERROR) {
             postExecute(attempt);
             attempt.setAttemptStatus(AttemptStatus.COMPILATION_ERROR);
             return 0;
@@ -93,7 +94,7 @@ public abstract class AbstractExecutor implements ExecutorService {
     }
 
     protected int runStdInTests(List<Test> tests) {
-        int testsCount = 1;
+        int testsCount = 0;
         for (Test test: tests) {
             testsCount++;
             String input = test.getInput();

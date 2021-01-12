@@ -7,6 +7,6 @@ import ru.stray27.scontester.entities.Attempt;
 import java.util.Optional;
 
 public interface AttemptRepository extends CrudRepository<Attempt, Long> {
-    @Query("SELECT a FROM Attempt a ORDER BY a.id")
+    @Query("SELECT a FROM Attempt a ORDER BY a.id DESC")
     Optional<Iterable<Attempt>> findAllOrderById();
 }

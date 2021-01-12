@@ -14,7 +14,7 @@ public class Test {
     @SequenceGenerator(name = "test_generator", sequenceName = "test_seq")
     private Long id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "task_id")
     private Task task;
 

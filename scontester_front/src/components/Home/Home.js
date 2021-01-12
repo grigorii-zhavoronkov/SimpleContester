@@ -15,13 +15,15 @@ function Home() {
         setTasks([
             {
                 "id": 1,
-                "title": "a+b",
-                "description": "Sum of two integers",
-                "testsFile": "/Users/grigoriy/scnotester_test/tasks/task_a+b.csv",
-                "inputType": "STDIN",
-                "timeLimit": 1,
-                "memoryLimit": 64,
-                "attempts": []
+                "title": "a+b"
+            },
+            {
+                "id": 2,
+                "title": "a+b333"
+            },
+            {
+                "id": 3,
+                "title": "a+b334"
             }
         ])
     }, []);

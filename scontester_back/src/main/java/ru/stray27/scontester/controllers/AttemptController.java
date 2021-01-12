@@ -1,15 +1,16 @@
 package ru.stray27.scontester.controllers;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.stray27.scontester.dto.AttemptDto;
 import ru.stray27.scontester.entities.Attempt;
+import ru.stray27.scontester.entities.AttemptStatus;
 import ru.stray27.scontester.entities.Sender;
 import ru.stray27.scontester.entities.Task;
-import ru.stray27.scontester.dto.AttemptInput;
-import ru.stray27.scontester.dto.AttemptOutput;
 import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.repositories.SenderRepository;
 import ru.stray27.scontester.repositories.TaskRepository;
@@ -19,6 +20,7 @@ import ru.stray27.scontester.services.TaskExecutorService;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
@@ -44,35 +46,37 @@ public class AttemptController {
     @Autowired
     private Executor asyncExecutor;
 
+    @JsonView(AttemptDto.AttemptInput.class)
     @PostMapping("sendAttempt")
-    public ResponseEntity<Object> sendAttempt(@RequestBody AttemptInput attemptInput,
+    public ResponseEntity<Object> sendAttempt(@RequestBody AttemptDto attemptDto,
                                       HttpServletRequest request) {
         Sender sender;
         try {
-            sender = senderRepository.findByUID(attemptInput.getUid()).orElseThrow();
+            sender = senderRepository.findByUID(attemptDto.getUid()).orElseThrow();
         } catch (NoSuchElementException e) {
-            log.error("Sender for UID " + attemptInput.getUid() + " wasn't found");
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            log.error("Sender for UID " + attemptDto.getUid() + " wasn't found");
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         Task task;
         try {
-            task = taskRepository.findById(attemptInput.getTaskId()).orElseThrow();
+            task = taskRepository.findById(attemptDto.getTaskId()).orElseThrow();
         } catch (NoSuchElementException e) {
-            log.error("Can't find task with id " + attemptInput.getTaskId());
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE);
+            log.error("Can't find task with id " + attemptDto.getTaskId());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
         Attempt attempt = new Attempt();
         attempt.setSender(sender);
         attempt.setTask(task);
         attempt.setIpAddr(request.getRemoteAddr());
-        attempt.setProgrammingLanguage(attemptInput.getProgrammingLanguage());
+        attempt.setAttemptStatus(AttemptStatus.IN_QUEUE);
+        attempt.setProgrammingLanguage(attemptDto.getProgrammingLanguage());
         attemptRepository.save(attempt);
         attempt.setSourceCodeFilename(
                 fileManagementService.saveSourceCodeFile(
-                        attemptInput.getTaskId(),
-                        attemptInput.getUid(),
+                        attemptDto.getTaskId(),
+                        attemptDto.getUid(),
                         attempt.getId(),
-                        attemptInput.getCode()
+                        attemptDto.getCode()
                 )
         );
         attemptRepository.save(attempt);
@@ -81,39 +85,38 @@ public class AttemptController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @JsonView(AttemptDto.AttemptOutput.class)
     @GetMapping("getAttempts")
-    public ResponseEntity<Iterable<AttemptOutput>> getAttempts() {
+    public ResponseEntity<?> getAttempts() {
         try {
-            Iterable<Attempt> attempts = attemptRepository.findAllOrderById().orElseThrow();
-            List<AttemptOutput> outputAttempts = new ArrayList<>();
-            int attemptCounter = 0;
+            List<Attempt> attempts = (List<Attempt>) attemptRepository.findAllOrderById().orElseThrow();
+            attempts = attempts.stream().limit(30).collect(Collectors.toList());
+            List<AttemptDto> outputAttempts = new ArrayList<>();
             for (Attempt attempt : attempts) {
-                if (attemptCounter++ < 30) {
-                    AttemptOutput attemptOutput = new AttemptOutput();
-                    attemptOutput.setId(attempt.getId());
-                    attemptOutput.setAttemptStatus(attempt.getAttemptStatus());
-                    attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
-                    attemptOutput.setSenderName(attempt.getSender().getName());
-                    outputAttempts.add(attemptOutput);
-                } else {
-                    break;
-                }
+                AttemptDto attemptOutput = new AttemptDto();
+                attemptOutput.setId(attempt.getId());
+                attemptOutput.setTaskId(attempt.getTask().getId());
+                attemptOutput.setTaskTitle(attempt.getTask().getTitle());
+                attemptOutput.setStatus(attempt.getAttemptStatus());
+                attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
+                attemptOutput.setSenderName(attempt.getSender().getName());
+                outputAttempts.add(attemptOutput);
             }
             return new ResponseEntity<>(outputAttempts, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             log.error("Can't resolve attempts from database");
-            log.error(e.getLocalizedMessage());
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            log.error(e.getMessage());
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
     @GetMapping("getSourceCode")
-    public ResponseEntity<List<String>> getSourceCode(@RequestBody Attempt attempt) {
+    public ResponseEntity<?> getSourceCode(@RequestBody Attempt attempt) {
         try {
             attempt = attemptRepository.findById(attempt.getId()).orElseThrow();
             return new ResponseEntity<>(fileManagementService.readFile(attempt.getSourceCodeFilename()), HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
         }
     }
 

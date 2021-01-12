@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.Collection;
+import java.util.*;
 
 @Entity
 @Getter
@@ -27,10 +27,10 @@ public class Task {
     private Integer memoryLimit;
 
     @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
-    private Collection<Attempt> attempts;
+    private Set<Attempt> attempts = new HashSet<>();
 
     @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
-    private Collection<Test> tests;
+    private Set<Test> tests = new HashSet<>();
 
     @PrePersist
     private void prePersist() {

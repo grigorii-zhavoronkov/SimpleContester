@@ -1,20 +1,32 @@
+import 'bootstrap/dist/css/bootstrap.min.css';
+import {Table} from "react-bootstrap";
+import {Link} from "react-router-dom";
+
 function TaskTable (props) {
     return (
         <div>
-            <table>
+            <Table bordered hover>
+                <thead>
                 <tr>
                     <th>ID</th>
                     <th>Title</th>
                 </tr>
+                </thead>
+                <tbody>
                 {props.tasks.map(task => {
                     return (
-                        <tr>
-                            <td>{task.id}</td>
+                        <tr key={task.id}>
+                            <td>
+                                <Link to={`/task/${task.id}`}>
+                                    {task.id}
+                                </Link>
+                            </td>
                             <td>{task.title}</td>
                         </tr>
                     )
                 })}
-            </table>
+                </tbody>
+            </Table>
         </div>
     )
 }

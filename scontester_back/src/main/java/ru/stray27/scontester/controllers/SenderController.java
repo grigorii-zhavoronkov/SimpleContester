@@ -18,12 +18,12 @@ public class SenderController {
     private SenderRepository repository;
 
     @RequestMapping(value = "restoreUID", method = RequestMethod.POST)
-    public ResponseEntity restoreUIDByName(@RequestBody Sender sender) {
+    public ResponseEntity<Sender> restoreUIDByName(@RequestBody Sender sender) {
         try {
             sender = repository.findByName(sender.getName()).orElseThrow();
-            return new ResponseEntity(sender, HttpStatus.OK);
+            return new ResponseEntity<>(sender, HttpStatus.OK);
         } catch (NoSuchElementException e) {
-            return new ResponseEntity(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 }
