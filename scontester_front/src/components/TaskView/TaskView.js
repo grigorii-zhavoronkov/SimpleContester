@@ -1,6 +1,7 @@
 import {useEffect, useState} from "react";
 import {Table, Form, Button} from "react-bootstrap";
 import { useHistory, useParams  } from "react-router-dom";
+import API from "../api";
 
 function TaskView() {
 
@@ -10,8 +11,8 @@ function TaskView() {
     const [task, setTask] = useState({});
     const [attempt, setAttempt] = useState({
         "taskId": id,
-        "UID": "",
-        "language": "PASCAL",
+        "uid": "",
+        "programmingLanguage": "PASCAL",
         "code": ""
     })
 
@@ -20,36 +21,19 @@ function TaskView() {
     }
 
     function submit(event) {
-        console.log(attempt);
-        //api
+        attempt.code = attempt.code.replaceAll("\t", "    ");
+        API.post("attempt/sendAttempt", attempt)
         history.push("/attempts")
         event.preventDefault();
     }
 
     useEffect(() => {
-        setTask({
-            "id": 1,
-            "title": "a+b",
-            "description": "Sum of two integers",
-            "inputType": "STDIN",
-            "timeLimit": 1,
-            "memoryLimit": 64,
-            "tests": [
-                {
-                    "id": 1,
-                    "task": null,
-                    "input": "2\n2",
-                    "output": "4"
-                },
-                {
-                    "id": 2,
-                    "task": null,
-                    "input": "3\n3",
-                    "output": "6"
-                }
-            ]
-        });
-    });
+        API.get("task/get", {
+            params: {id}
+        }).then(function(response) {
+            setTask(response.data)
+        })
+    }, []);
 
     return (
         <div>
@@ -67,7 +51,7 @@ function TaskView() {
                     </tr>
                 </thead>
                 <tbody>
-                {task.tests.map(test => {
+                {task.tests && task.tests.map(test => {
                     return (
                         <tr key={test.id}>
                             <td><pre>{test.input}</pre></td>
@@ -78,7 +62,7 @@ function TaskView() {
                 </tbody>
             </Table>
             <Form>
-                <Form.Group controlId="UID">
+                <Form.Group controlId="uid">
                     <Form.Label>UID</Form.Label>
                     <Form.Control
                         type="text"
@@ -87,7 +71,7 @@ function TaskView() {
                         value={attempt.UID}
                         onChange={onFormChange}/>
                 </Form.Group>
-                <Form.Group controlId="language">
+                <Form.Group controlId="programmingLanguage">
                     <Form.Label>Выберите язык</Form.Label>
                     <Form.Control as="select" value={attempt.language} onChange={onFormChange}>
                         <option value="PASCAL">Pascal (FPC)</option>

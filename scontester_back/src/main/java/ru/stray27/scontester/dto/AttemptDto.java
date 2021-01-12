@@ -7,6 +7,9 @@ import lombok.Setter;
 import ru.stray27.scontester.entities.AttemptStatus;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,6 +31,7 @@ public class AttemptDto {
     private Long id;
 
     @JsonView({AttemptInput.class})
+    @Enumerated(EnumType.STRING)
     private ProgrammingLanguage programmingLanguage;
 
     @JsonView({AttemptOutput.class})
@@ -37,6 +41,7 @@ public class AttemptDto {
     private String taskTitle;
 
     @JsonView({AttemptOutput.class})
+    @Enumerated(EnumType.STRING)
     private AttemptStatus status;
 
     @JsonView({AttemptOutput.class})

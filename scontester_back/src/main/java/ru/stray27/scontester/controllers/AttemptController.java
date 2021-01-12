@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 
 @Log4j2
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RequestMapping("/attempt/")
 public class AttemptController {
 

@@ -8,11 +8,12 @@ function Home() {
     const [tasks, setTasks] = useState([]);
 
     useEffect(() => {
-        /*API.get("task/getAll")
+        API.get("task/getAll")
             .then(function(response) {
                 setTasks(response.data);
-            })*/
-        setTasks([
+                console.log(response.data);
+            })
+        /*setTasks([
             {
                 "id": 1,
                 "title": "a+b"
@@ -25,7 +26,7 @@ function Home() {
                 "id": 3,
                 "title": "a+b334"
             }
-        ])
+        ])*/
     }, []);
 
     return (

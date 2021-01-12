@@ -49,7 +49,7 @@ public class DefaultFileManagementService implements FileManagementService {
 
     private String writeToFile(File file, String content) {
         try {
-            if (!file.createNewFile()) {
+            if (!file.exists() && !file.createNewFile()) {
                 throw new IOException("Can't create file " + file.getName());
             }
             FileWriter writer = new FileWriter(file);

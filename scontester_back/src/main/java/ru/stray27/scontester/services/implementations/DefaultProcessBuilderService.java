@@ -1,5 +1,6 @@
 package ru.stray27.scontester.services.implementations;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
@@ -14,9 +15,12 @@ import java.nio.charset.StandardCharsets;
 @Service
 public class DefaultProcessBuilderService implements ProcessBuilderService {
 
-    Process process;
-    InputStream processInputStream;
-    OutputStream processOutputStream;
+    @Getter
+    private Process process;
+    @Getter
+    private InputStream processInputStream;
+    @Getter
+    private OutputStream processOutputStream;
 
     @SneakyThrows
     @Override

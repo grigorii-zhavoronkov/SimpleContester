@@ -17,7 +17,7 @@ import ru.stray27.scontester.repositories.TaskRepository;
 import ru.stray27.scontester.repositories.TestRepository;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RequestMapping("/admin/api/")
 public class AdminManagementController {
 

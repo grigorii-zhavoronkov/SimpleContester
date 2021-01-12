@@ -10,7 +10,7 @@ import ru.stray27.scontester.repositories.SenderRepository;
 import java.util.NoSuchElementException;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin(origins = "*")
 @RequestMapping("/sender/")
 public class SenderController {
 

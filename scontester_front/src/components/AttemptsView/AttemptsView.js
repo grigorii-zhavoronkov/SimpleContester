@@ -1,31 +1,32 @@
 import {Table} from "react-bootstrap";
 import {useEffect, useState} from "react";
+import {Link} from "react-router-dom";
+import API from "../api"
 
 function AttemptsView() {
 
     const [attempts, setAttempts] = useState([]);
 
     useEffect(() => {
-        // api request
-        setAttempts([
-            {
-                "id": 2,
-                "senderName": "Ivanov Ivan Ivanovich",
-                "taskId": 1,
-                "taskTitle": "a+b",
-                "status": "OK",
-                "lastTestNumber": 0
-            },
-            {
-                "id": 1,
-                "senderName": "Ivanov Ivan Ivanovich",
-                "taskId": 1,
-                "taskTitle": "a+b",
-                "status": "WA",
-                "lastTestNumber": 3
-            },
-        ])
+        API.get("/attempt/getAttempts")
+            .then(function (response) {
+                setAttempts(response.data);
+                console.log(response.data);
+            })
     }, [])
+
+    function getStatus(attempt){
+        if (attempt.status) {
+            switch (attempt.status) {
+                case "WRONG_ANSWER":
+                case "TIME_LIMIT_EXCEED":
+                case "MEMORY_LIMIT_EXCEED":
+                    return `${attempt.status}#${attempt.lastTestNumber}`
+                default:
+                    return `${attempt.status}`
+            }
+        }
+    }
 
     return (
         <div>
@@ -44,8 +45,8 @@ function AttemptsView() {
                         <tr key={attempt.id}>
                             <td>{attempt.id}</td>
                             <td>{attempt.senderName}</td>
-                            <td>{attempt.taskTitle}</td>
-                            <td>{attempt.status}</td>
+                            <td><Link to={`/task/${attempt.taskId}`}>{attempt.taskTitle}</Link></td>
+                            <td>{getStatus(attempt)}</td>
                         </tr>
                     )
                 })}
