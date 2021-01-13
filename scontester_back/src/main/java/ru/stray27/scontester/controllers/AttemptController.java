@@ -64,10 +64,12 @@ public class AttemptController {
             log.error("Can't find task with id " + attemptDto.getTaskId());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_ACCEPTABLE);
         }
+        String ipAddr = request.getHeader("X-FORWARDED-FOR");
+        ipAddr = (ipAddr == null || ipAddr.equals("")) ? request.getRemoteAddr() : ipAddr;
         Attempt attempt = new Attempt();
         attempt.setSender(sender);
         attempt.setTask(task);
-        attempt.setIpAddr(request.getRemoteAddr());
+        attempt.setIpAddr(ipAddr);
         attempt.setAttemptStatus(AttemptStatus.IN_QUEUE);
         attempt.setProgrammingLanguage(attemptDto.getProgrammingLanguage());
         attemptRepository.save(attempt);
