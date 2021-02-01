@@ -1,11 +1,13 @@
 package ru.stray27.scontester.controllers;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.stray27.scontester.dto.AttemptDto;
 import ru.stray27.scontester.dto.TaskDto;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.Sender;
@@ -15,6 +17,9 @@ import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.repositories.SenderRepository;
 import ru.stray27.scontester.repositories.TaskRepository;
 import ru.stray27.scontester.repositories.TestRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -29,13 +34,29 @@ public class AdminManagementController {
     private AttemptRepository attemptRepository;
     @Autowired
     private TestRepository testRepository;
+    @Autowired
+    private ModelMapper modelMapper;
 
+    @GetMapping(value = "login")
+    public ResponseEntity<?> login() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     @PostMapping(value = "deleteSender")
     public ResponseEntity<?> deleteSender(@RequestBody Sender sender) {
         try {
             senderRepository.deleteById(sender.getUID());
             return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping(value = "getSenders")
+    public ResponseEntity<?> getSenders() {
+        try {
+            Iterable<Sender> senders = senderRepository.findAll();
+            return new ResponseEntity<>(senders, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -77,7 +98,19 @@ public class AdminManagementController {
     }
 
     @GetMapping(value = "getAttempts")
-    public ResponseEntity<Iterable<Attempt>> getAllAttempts() {
-        return new ResponseEntity<>(attemptRepository.findAll(), HttpStatus.OK);
+    public ResponseEntity<Iterable<AttemptDto>> getAllAttempts() {
+        List<Attempt> attempts = (List<Attempt>) attemptRepository.findAllOrderById().orElseThrow();
+        List<AttemptDto> outputAttempts = new ArrayList<>();
+        for (Attempt attempt : attempts) {
+            AttemptDto attemptOutput = new AttemptDto();
+            attemptOutput.setId(attempt.getId());
+            attemptOutput.setTaskId(attempt.getTask().getId());
+            attemptOutput.setTaskTitle(attempt.getTask().getTitle());
+            attemptOutput.setStatus(attempt.getAttemptStatus());
+            attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
+            attemptOutput.setSenderName(attempt.getSender().getName());
+            outputAttempts.add(attemptOutput);
+        }
+        return new ResponseEntity<>(outputAttempts, HttpStatus.OK);
     }
 }

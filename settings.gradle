@@ -1,0 +1,3 @@
+rootProject.name = 'SimpleContester'
+include 'scontester_back'
+include 'scontester_front'

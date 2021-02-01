@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 import {Table, Form, Button} from "react-bootstrap";
 import { useHistory, useParams  } from "react-router-dom";
 import API from "../api";
+import {toast} from "react-toastify";
 
 function TaskView() {
 
@@ -12,7 +13,7 @@ function TaskView() {
     const [attempt, setAttempt] = useState({
         "taskId": id,
         "uid": "",
-        "programmingLanguage": "PASCAL",
+        "programmingLanguage": "FREE_PASCAL",
         "code": ""
     })
 
@@ -23,23 +24,35 @@ function TaskView() {
     function submit(event) {
         attempt.code = attempt.code.replaceAll("\t", "    ");
         API.post("attempt/sendAttempt", attempt)
-        history.push("/attempts")
-        event.preventDefault();
+            .then(function (response) {
+                if (response.status !== 200) {
+                    toast.error(response.data);
+                } else {
+                    history.push("/attempts")
+                    event.preventDefault();
+                }
+            }).catch(function(err) {
+                toast.error(err.toString());
+                console.log(err);
+            });
     }
 
     useEffect(() => {
         API.get("task/get", {
             params: {id}
         }).then(function(response) {
-            setTask(response.data)
+            if (response.status === 200) {
+                setTask(response.data)
+            }
+        }).catch(function(err) {
+            toast.error(err.toString());
+            console.log(err);
         })
     }, []);
 
     return (
         <div>
             <h1>{task.id}. {task.title}</h1>
-            <p>Ограничение по времени: {task.timeLimit} сек.</p>
-            <p>Ограничение по памяти: {task.memoryLimit} МБ</p>
             <p>
                 {task.description}
             </p>
@@ -68,14 +81,14 @@ function TaskView() {
                         type="text"
                         placeholder="AAA11"
                         maxLength="5"
-                        value={attempt.UID}
+                        value={attempt.uid}
                         onChange={onFormChange}/>
                 </Form.Group>
                 <Form.Group controlId="programmingLanguage">
                     <Form.Label>Выберите язык</Form.Label>
                     <Form.Control as="select" value={attempt.language} onChange={onFormChange}>
-                        <option value="PASCAL">Pascal (FPC)</option>
-                        <option value="JAVA">Java 8</option>
+                        <option value="FREE_PASCAL">Pascal (FPC)</option>
+                        <option value="JAVA">Java 11</option>
                         <option value="PYTHON2">Python 2</option>
                         <option value="PYTHON3">Python 3</option>
                         <option value="C">C</option>

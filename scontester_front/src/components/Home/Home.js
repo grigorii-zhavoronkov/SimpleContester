@@ -2,6 +2,7 @@ import {useEffect, useState} from "react";
 
 import API from "../api";
 import TaskTable from "../TaskTable/TaskTable";
+import {toast} from "react-toastify";
 
 function Home() {
 
@@ -13,20 +14,10 @@ function Home() {
                 setTasks(response.data);
                 console.log(response.data);
             })
-        /*setTasks([
-            {
-                "id": 1,
-                "title": "a+b"
-            },
-            {
-                "id": 2,
-                "title": "a+b333"
-            },
-            {
-                "id": 3,
-                "title": "a+b334"
-            }
-        ])*/
+            .catch(function(err) {
+                toast.error(err.toString());
+                console.log(err);
+        })
     }, []);
 
     return (

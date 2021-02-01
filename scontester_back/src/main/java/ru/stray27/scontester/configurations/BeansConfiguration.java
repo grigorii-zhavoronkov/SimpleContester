@@ -1,5 +1,6 @@
 package ru.stray27.scontester.configurations;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,5 +23,10 @@ public class BeansConfiguration {
         executor.setThreadNamePrefix("Task-");
         executor.initialize();
         return executor;
+    }
+
+    @Bean
+    public ModelMapper modelMapper() {
+        return new ModelMapper();
     }
 }

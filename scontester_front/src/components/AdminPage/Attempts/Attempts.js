@@ -1,31 +1,28 @@
-import {Table} from "react-bootstrap";
 import {useEffect, useState} from "react";
+import API from "../../api";
 import {Link} from "react-router-dom";
-import API from "../api"
+import {toast} from "react-toastify";
+import {Table} from "react-bootstrap";
 
-function AttemptsView() {
+function Attempts() {
 
     const [attempts, setAttempts] = useState([]);
 
-    useEffect(() => {
-        API.get("/attempt/getAttempts")
-            .then(function (response) {
-                setAttempts(response.data);
-            })
-    }, [])
+    const password = localStorage.getItem("Authorization");
 
-    function getStatus(attempt) {
-        if (attempt.status) {
-            switch (attempt.status) {
-                case "WRONG_ANSWER":
-                case "TIME_LIMIT_EXCEED":
-                case "MEMORY_LIMIT_EXCEED":
-                    return `${attempt.status}#${attempt.lastTestNumber}`
-                default:
-                    return `${attempt.status}`
+    useEffect(() => {
+        API.get("admin/api/getAttempts", {
+            headers: {
+                "Authorization": password
             }
-        }
-    }
+        }).then(function (response) {
+            if (response.status === 200) {
+                setAttempts(response.data)
+            }
+        }).catch(function (err) {
+            toast.error(err.toString)
+        })
+    }, [])
 
     return (
         <div>
@@ -36,16 +33,18 @@ function AttemptsView() {
                     <th>name</th>
                     <th>task</th>
                     <th>status</th>
+                    <th>last test number</th>
                 </tr>
                 </thead>
                 <tbody>
-                {attempts.map(attempt => {
+                {attempts && attempts.map(attempt => {
                     return (
                         <tr key={attempt.id}>
                             <td>{attempt.id}</td>
                             <td>{attempt.senderName}</td>
                             <td><Link to={`/task/${attempt.taskId}`}>{attempt.taskTitle}</Link></td>
-                            <td>{getStatus(attempt)}</td>
+                            <td>{attempt.status}</td>
+                            <td>{attempt.lastTestNumber}</td>
                         </tr>
                     )
                 })}
@@ -55,4 +54,4 @@ function AttemptsView() {
     )
 }
 
-export default AttemptsView;
+export default Attempts;

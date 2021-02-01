@@ -17,6 +17,7 @@ public class Task {
 
     private String title;
 
+    @Column(columnDefinition = "varchar(2000)")
     private String description;
 
     @Enumerated(EnumType.STRING)

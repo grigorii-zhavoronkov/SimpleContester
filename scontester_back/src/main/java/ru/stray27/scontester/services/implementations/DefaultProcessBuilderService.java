@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.TimeUnit;
 
 @Log4j2
 @Service
@@ -26,9 +27,20 @@ public class DefaultProcessBuilderService implements ProcessBuilderService {
     @Override
     public void startProcess(String... args) {
         ProcessBuilder processBuilder = new ProcessBuilder(args);
+        log.info("CREATING PROCESS");
+        log.info(args);
         this.process = processBuilder.start();
         this.processInputStream = process.getInputStream();
         this.processOutputStream = process.getOutputStream();
+        Thread killThread = new Thread(new Runnable() {
+            @SneakyThrows
+            @Override
+            public void run() {
+                process.waitFor(10, TimeUnit.SECONDS);
+                process.destroy();
+            }
+        });
+        killThread.start();
     }
 
     @Override

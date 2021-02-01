@@ -23,8 +23,6 @@ import java.util.Scanner;
 
 @Log4j2
 public abstract class AbstractExecutor implements ExecutorService {
-    @Value("${csv-delimiter}")
-    protected String delimiter;
 
     @Value("${test-dir}")
     protected String testDirectoryPath;
