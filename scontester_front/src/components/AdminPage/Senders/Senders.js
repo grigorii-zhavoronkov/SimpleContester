@@ -24,7 +24,8 @@ function Senders() {
                 }
             }).catch(function (err) {
                 toast.error(err.toString())
-        })
+        });
+        loadSenders();
     }
 
     function loadSenders() {

@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'ru.stray27'
-version = '0.0.1-ALPHA'
+version = '0.1.1'
 sourceCompatibility = '11'
 
 configurations {

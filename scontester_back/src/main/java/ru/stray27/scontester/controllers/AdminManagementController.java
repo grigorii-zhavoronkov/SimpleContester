@@ -84,11 +84,11 @@ public class AdminManagementController {
             task.setTimeLimit(taskInput.getTimeLimit());
             task.setMemoryLimit(taskInput.getMemoryLimit());
             taskRepository.save(task);
-            for (Test input_test : taskInput.getTests()) {
+            for (Test inputTest : taskInput.getTests()) {
                 Test test = new Test();
                 test.setTask(task);
-                test.setInput(input_test.getInput());
-                test.setOutput(input_test.getOutput());
+                test.setInput(inputTest.getInput());
+                test.setOutput(inputTest.getOutput());
                 testRepository.save(test);
             }
             return new ResponseEntity<>(HttpStatus.OK);
