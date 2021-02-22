@@ -16,7 +16,7 @@
         <tbody>
         {#each senders as sender}
             <tr>
-                <td>{sender.UID}</td>
+                <td>{sender.uid}</td>
                 <td>{sender.name}</td>
             </tr>
         {/each}

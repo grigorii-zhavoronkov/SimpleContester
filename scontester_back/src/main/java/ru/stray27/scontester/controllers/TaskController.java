@@ -56,4 +56,9 @@ public class TaskController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @PostMapping(value = "delete")
+    public ResponseEntity<TaskDto> deleteTask() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

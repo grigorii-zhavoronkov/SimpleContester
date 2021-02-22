@@ -36,7 +36,7 @@ public class DefaultProcessBuilderService implements ProcessBuilderService {
             @SneakyThrows
             @Override
             public void run() {
-                process.waitFor(10, TimeUnit.SECONDS);
+                process.waitFor(20, TimeUnit.SECONDS);
                 process.destroy();
             }
         });

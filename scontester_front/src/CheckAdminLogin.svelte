@@ -5,7 +5,6 @@
 
     onMount(() => {
         const password = localStorage.getItem("password");
-        const UID = localStorage.getItem("UID");
         if (password) {
             axios.get("admin/api/login", {
                 headers: {
@@ -14,15 +13,15 @@
             })
             .then(r => {
                 if (r.status !== 200) {
-                    push("/")
+                    push("/");
                 }
             })
             .catch(e => {
-                push("/")
+                push("/");
+                console.log(e);
             })
-        } else if (UID) {
-
         } else {
+            console.log("NO PASS");
             push("/");
         }
     })

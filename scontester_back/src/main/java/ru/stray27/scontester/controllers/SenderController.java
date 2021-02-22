@@ -26,4 +26,14 @@ public class SenderController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
+
+    @RequestMapping(value = "checkUID", method = RequestMethod.POST)
+    public ResponseEntity<?> checkUID(@RequestBody Sender sender) {
+        try {
+            repository.findByUID(sender.getUID()).orElseThrow();
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 }
