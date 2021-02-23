@@ -5,6 +5,7 @@
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/build" />
       <excludeFolder url="file://$MODULE_DIR$/public/build" />
+      <excludePattern pattern="global.css" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

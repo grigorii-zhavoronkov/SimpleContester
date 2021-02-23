@@ -21,6 +21,7 @@ public class SenderController {
     public ResponseEntity<Sender> restoreUIDByName(@RequestBody Sender sender) {
         try {
             sender = repository.findByName(sender.getName()).orElseThrow();
+            sender.setAttempts(null);
             return new ResponseEntity<>(sender, HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

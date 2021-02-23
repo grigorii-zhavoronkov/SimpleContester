@@ -15,7 +15,6 @@ public class Test {
     private Long id;
 
     @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    @JoinColumn(name = "task_id")
     private Task task;
 
     private String input;

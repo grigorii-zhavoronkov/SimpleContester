@@ -28,7 +28,11 @@ public class DefaultProcessBuilderService implements ProcessBuilderService {
     public void startProcess(String... args) {
         ProcessBuilder processBuilder = new ProcessBuilder(args);
         log.info("CREATING PROCESS");
-        log.info(args);
+        StringBuilder command = new StringBuilder();
+        for (String arg : args) {
+            command.append(arg).append(" ");
+        }
+        log.info(command.toString());
         this.process = processBuilder.start();
         this.processInputStream = process.getInputStream();
         this.processOutputStream = process.getOutputStream();
@@ -38,6 +42,7 @@ public class DefaultProcessBuilderService implements ProcessBuilderService {
             public void run() {
                 process.waitFor(20, TimeUnit.SECONDS);
                 process.destroy();
+                process.waitFor();
             }
         });
         killThread.start();

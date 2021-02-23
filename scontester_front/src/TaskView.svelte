@@ -2,13 +2,13 @@
     import Logout from "./Logout.svelte";
 
     export let params = {};
+    export let isAdmin = false;
 
     import {Table, Spinner, Form, FormGroup, Label, Input, Button} from "sveltestrap";
     import {onMount} from "svelte";
     import {push} from "svelte-spa-router"
     import axios from 'axios';
     import BackLink from "./BackLink.svelte";
-    import CheckSenderLogin from "./CheckSenderLogin.svelte";
 
     const id = params.id;
     let task = {};
@@ -49,7 +49,6 @@
 </script>
 
 <div class="container">
-    <CheckSenderLogin />
     <Logout />
     <BackLink />
     {#if task.id === -1}
@@ -74,23 +73,25 @@
             {/each}
             </tbody>
         </Table>
-        <p>Вы будете отправлять задания от <span class="font-bold">{attempt.uid}</span></p>
-        <FormGroup>
-            <Label for="programmingLanguage">Выберите язык программирования</Label>
-            <Input type="select" name="programmingLanguage" bind:value={attempt.programmingLanguage}>
-                <option value="FREE_PASCAL">Pascal (FPC)</option>
-                <option value="JAVA">Java 11</option>
-                <option value="PYTHON2">Python 2</option>
-                <option value="PYTHON3">Python 3</option>
-                <option value="C">C</option>
-                <option value="CPP">C++</option>
-            </Input>
-        </FormGroup>
-        <FormGroup>
-            <Label for="code">Код программы:</Label>
-            <Input type="textarea" name="code" bind:value={attempt.code}/>
-        </FormGroup>
-        <Button on:click={submitAttempt} color="primary">Отправить</Button>
+        {#if !isAdmin}
+            <p>Вы будете отправлять задания от <span class="font-bold">{attempt.uid}</span></p>
+            <FormGroup>
+                <Label for="programmingLanguage">Выберите язык программирования</Label>
+                <Input type="select" name="programmingLanguage" bind:value={attempt.programmingLanguage}>
+                    <option value="FREE_PASCAL">Pascal (FPC)</option>
+                    <option value="JAVA">Java 11</option>
+                    <option value="PYTHON2">Python 2</option>
+                    <option value="PYTHON3">Python 3</option>
+                    <option value="C">C</option>
+                    <option value="CPP">C++</option>
+                </Input>
+            </FormGroup>
+            <FormGroup>
+                <Label for="code">Код программы:</Label>
+                <Input type="textarea" name="code" bind:value={attempt.code}/>
+            </FormGroup>
+            <Button on:click={submitAttempt} color="primary">Отправить</Button>
+        {/if}
     {:else}
         <Spinner color="primary" />
     {/if}

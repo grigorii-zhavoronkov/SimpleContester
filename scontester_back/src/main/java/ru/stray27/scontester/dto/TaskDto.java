@@ -18,18 +18,11 @@ public class TaskDto {
     public interface OutputList {}
     public interface Output {}
 
-    @JsonView({Output.class, OutputList.class})
     private Long id;
-    @JsonView({Input.class, Output.class, OutputList.class})
     private String title;
-    @JsonView({Input.class, Output.class})
     private String description;
-    @JsonView({Input.class, Output.class})
     private InputType inputType;
-    @JsonView({Input.class, Output.class})
     private Integer timeLimit;
-    @JsonView({Input.class, Output.class})
     private Integer memoryLimit;
-    @JsonView({Input.class, Output.class})
     private Test[] tests;
 }

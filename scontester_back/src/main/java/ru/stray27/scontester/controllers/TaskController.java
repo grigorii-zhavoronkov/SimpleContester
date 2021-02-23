@@ -10,9 +10,7 @@ import ru.stray27.scontester.entities.Task;
 import ru.stray27.scontester.entities.Test;
 import ru.stray27.scontester.repositories.TaskRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -22,7 +20,6 @@ public class TaskController {
     @Autowired
     private TaskRepository repository;
 
-    @JsonView(TaskDto.OutputList.class)
     @RequestMapping(value = "getAll", method = RequestMethod.GET)
     public ResponseEntity<Iterable<TaskDto>> getAllTasks() {
         Iterable<Task> tasksAll = repository.findAll();
@@ -33,6 +30,7 @@ public class TaskController {
             dto.setTitle(task.getTitle());
             tasks.add(dto);
         }
+        tasks.sort((o1, o2) -> (int) (o1.getId() - o2.getId()));
         return new ResponseEntity<>(tasks, HttpStatus.OK);
     }
 
@@ -55,10 +53,5 @@ public class TaskController {
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-    }
-
-    @PostMapping(value = "delete")
-    public ResponseEntity<TaskDto> deleteTask() {
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
