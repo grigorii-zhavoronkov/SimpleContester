@@ -11,7 +11,7 @@ public class SenderConverter implements EntityConverter<Sender, SenderDto> {
 
     @Override
     public Sender convertToEntity(SenderDto dto) {
-        return null;
+        return modelMapper.map(dto, Sender.class);
     }
 
     @Override

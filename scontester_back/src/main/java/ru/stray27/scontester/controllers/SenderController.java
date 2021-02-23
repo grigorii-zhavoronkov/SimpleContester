@@ -21,7 +21,18 @@ public class SenderController {
     public ResponseEntity<Sender> restoreUIDByName(@RequestBody Sender sender) {
         try {
             sender = repository.findByName(sender.getName()).orElseThrow();
+            sender.setAttempts(null);
             return new ResponseEntity<>(sender, HttpStatus.OK);
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
+    @RequestMapping(value = "checkUID", method = RequestMethod.POST)
+    public ResponseEntity<?> checkUID(@RequestBody Sender sender) {
+        try {
+            repository.findByUID(sender.getUID()).orElseThrow();
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }

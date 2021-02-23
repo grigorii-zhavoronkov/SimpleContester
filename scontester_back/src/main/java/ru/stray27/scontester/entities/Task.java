@@ -27,10 +27,12 @@ public class Task {
 
     private Integer memoryLimit;
 
-    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "task_id")
     private Set<Attempt> attempts = new HashSet<>();
 
-    @OneToMany(mappedBy = "task", fetch = FetchType.EAGER)
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "task_id")
     private Set<Test> tests = new HashSet<>();
 
     @PrePersist

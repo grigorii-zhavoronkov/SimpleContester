@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.stray27.scontester.dto.AttemptDto;
+import ru.stray27.scontester.dto.SenderDto;
 import ru.stray27.scontester.dto.TaskDto;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.Sender;
@@ -45,7 +46,7 @@ public class AdminManagementController {
     @PostMapping(value = "deleteSender")
     public ResponseEntity<?> deleteSender(@RequestBody Sender sender) {
         try {
-            senderRepository.deleteById(sender.getUID());
+            senderRepository.deleteByUID(sender.getUID());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
@@ -56,7 +57,14 @@ public class AdminManagementController {
     public ResponseEntity<?> getSenders() {
         try {
             Iterable<Sender> senders = senderRepository.findAll();
-            return new ResponseEntity<>(senders, HttpStatus.OK);
+            List<SenderDto> dtos = new ArrayList<>();
+            for (Sender sender: senders) {
+                SenderDto dto = new SenderDto();
+                dto.setUID(sender.getUID());
+                dto.setName(sender.getName());
+                dtos.add(dto);
+            }
+            return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,6 +86,7 @@ public class AdminManagementController {
     public ResponseEntity<?> createTask(@RequestBody TaskDto taskInput) {
         try {
             Task task = new Task();
+            //task.setId(taskInput.getId());
             task.setTitle(taskInput.getTitle());
             task.setDescription(taskInput.getDescription());
             task.setInputType(taskInput.getInputType());
@@ -93,7 +102,19 @@ public class AdminManagementController {
             }
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PostMapping(value = "deleteTask")
+    public ResponseEntity<TaskDto> deleteTask(@RequestBody TaskDto dto) {
+        try {
+            Long id = dto.getId();
+            taskRepository.deleteById(id);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
     }
 
