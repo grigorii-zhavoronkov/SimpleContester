@@ -101,18 +101,24 @@ public abstract class AbstractExecutor implements ExecutorService {
                 attemptStatus = AttemptStatus.RUNTIME_EXCEPTION;
                 return testsCount;
             }
-            if (!checkOutput(processBuilderService.getOutput(), output)) {
-                attemptStatus = AttemptStatus.WRONG_ANSWER;
+            try {
+                if (!checkOutput(processBuilderService.getOutput(), output)) {
+                    attemptStatus = AttemptStatus.WRONG_ANSWER;
+                    return testsCount;
+                }
+            } catch (NullPointerException e) {
+                attemptStatus = AttemptStatus.TIME_LIMIT_EXCEED;
                 return testsCount;
             }
+
         }
         return testsCount;
     }
 
     protected int runFileInputTests(List<Test> tests) {
         int testsCount = 0;
-        createInputOutputFiles();
         for (Test test: tests) {
+            createInputOutputFiles();
             testsCount++;
             String input = test.getInput();
             String output = test.getOutput();
@@ -122,6 +128,8 @@ public abstract class AbstractExecutor implements ExecutorService {
             } catch (IOException e) {
                 log.error("Can't open/write to file " + testDirectoryPath + "input.txt");
                 log.error(e.getLocalizedMessage());
+                attemptStatus = AttemptStatus.INTERNAL_SERVER_ERROR;
+                return testsCount;
             }
             if (!runWithFileInput()) {
                 attemptStatus = AttemptStatus.RUNTIME_EXCEPTION;
@@ -135,13 +143,15 @@ public abstract class AbstractExecutor implements ExecutorService {
             } catch (IOException e) {
                 log.error("Can't open/read from file " + testDirectoryPath + "output.txt");
                 log.error(e.getLocalizedMessage());
+                attemptStatus = AttemptStatus.INTERNAL_SERVER_ERROR;
+                return testsCount;
             }
             if (!checkOutput(programOutput.toString(), output)) {
                 attemptStatus = AttemptStatus.WRONG_ANSWER;
                 return testsCount;
             }
+            deleteInputOutputFiles();
         }
-        deleteInputOutputFiles();
         return 0;
     }
 

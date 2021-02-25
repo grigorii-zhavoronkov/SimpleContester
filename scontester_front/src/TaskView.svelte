@@ -46,7 +46,20 @@
             })
             .finally(() => push("/attempts"));
     }
+
+    function resizeTextArea(e) {
+        document.getElementById("code").style.height = (e.target.value.split("\n").length + 1) * 22 + "px";
+    }
 </script>
+
+<style>
+    :global(#code) {
+        min-height: 100px;
+        max-height: 500px;
+        height: auto;
+        font-size: 15px;
+    }
+</style>
 
 <div class="container">
     <Logout />
@@ -88,7 +101,7 @@
             </FormGroup>
             <FormGroup>
                 <Label for="code">Код программы:</Label>
-                <Input type="textarea" name="code" bind:value={attempt.code}/>
+                <Input id="code" type="textarea" name="code" bind:value={attempt.code} on:input={resizeTextArea} />
             </FormGroup>
             <Button on:click={submitAttempt} color="primary">Отправить</Button>
         {/if}

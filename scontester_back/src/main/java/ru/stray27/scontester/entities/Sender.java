@@ -12,7 +12,7 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
-@EqualsAndHashCode
+@EqualsAndHashCode(exclude = {"attempts"})
 public class Sender {
     @Id
     @GenericGenerator(name = "uid_generator", strategy = "ru.stray27.scontester.utils.UIDGenerator")
@@ -22,7 +22,6 @@ public class Sender {
     @Column(unique = true)
     private String name;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "sender_uid")
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "sender")
     private Set<Attempt> attempts = new HashSet<>();
 }

@@ -101,10 +101,6 @@
     <ModalHeader {toggle}>Добавить задание</ModalHeader>
     <ModalBody>
         <FormGroup>
-            <Label>ID задания</Label>
-            <Input bind:value={newTask.id} type="number" placeholder="Обязательно для заполнения"/>
-        </FormGroup>
-        <FormGroup>
             <Label>Заголовок</Label>
             <Input bind:value={newTask.title} type="text" maxlength="255"/>
         </FormGroup>

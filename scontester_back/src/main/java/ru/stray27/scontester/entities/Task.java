@@ -27,8 +27,7 @@ public class Task {
 
     private Integer memoryLimit;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "task_id")
+    @OneToMany(orphanRemoval = true, fetch = FetchType.LAZY, mappedBy = "task")
     private Set<Attempt> attempts = new HashSet<>();
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)

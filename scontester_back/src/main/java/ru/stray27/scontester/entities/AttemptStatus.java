@@ -9,5 +9,6 @@ public enum AttemptStatus {
     MEMORY_LIMIT_EXCEED,
     RUNTIME_EXCEPTION,
     RUNNING,
-    IN_QUEUE
+    IN_QUEUE,
+    INTERNAL_SERVER_ERROR
 }

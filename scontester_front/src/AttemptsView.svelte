@@ -25,6 +25,7 @@
                 case "WRONG_ANSWER":
                 case "TIME_LIMIT_EXCEED":
                 case "MEMORY_LIMIT_EXCEED":
+                case "RUNTIME_EXCEPTION":
                     return `${attempt.status}#${attempt.lastTestNumber}`
                 default:
                     return `${attempt.status}`

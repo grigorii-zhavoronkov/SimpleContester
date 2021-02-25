@@ -44,11 +44,13 @@ public class AdminManagementController {
     }
 
     @PostMapping(value = "deleteSender")
-    public ResponseEntity<?> deleteSender(@RequestBody Sender sender) {
+    public ResponseEntity<?> deleteSender(@RequestBody SenderDto dto) {
         try {
+            Sender sender = senderRepository.findByUID(dto.getUID()).orElseThrow();
             senderRepository.deleteByUID(sender.getUID());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
+            e.printStackTrace();
             return new ResponseEntity<>(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
