@@ -4,7 +4,7 @@
     <exclude-output />
     <content url="file://$MODULE_DIR$">
       <excludeFolder url="file://$MODULE_DIR$/build" />
-      <excludeFolder url="file://$MODULE_DIR$/public/build" />
+      <excludeFolder url="file://$MODULE_DIR$/../scontester_back/src/main/resources/static/build" />
       <excludePattern pattern="global.css" />
     </content>
     <orderEntry type="sourceFolder" forTests="false" />

@@ -17,9 +17,10 @@
         '*': NotFound
     }
 
-    axios.defaults.baseURL = "http://localhost:8080"
+    axios.defaults.baseURL = "http://127.0.0.1:8080"
     axios.defaults.headers.common["Content-Type"]="Application/json"
     axios.defaults.headers.common["Accept"]="Application/json"
+    axios.defaults.headers.common["Access-Control-Allow-Origin"]="*"
 </script>
 
 <body>

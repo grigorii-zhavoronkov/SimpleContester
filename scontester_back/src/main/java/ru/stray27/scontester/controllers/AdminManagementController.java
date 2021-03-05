@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/admin/api/")
 public class AdminManagementController {
 

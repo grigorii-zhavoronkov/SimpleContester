@@ -1,6 +1,5 @@
 package ru.stray27.scontester.controllers;
 
-import com.fasterxml.jackson.annotation.JsonView;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +12,6 @@ import ru.stray27.scontester.repositories.TaskRepository;
 import java.util.*;
 
 @RestController
-@CrossOrigin(origins = "*")
 @RequestMapping("/task/")
 public class TaskController {
 
