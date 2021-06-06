@@ -1,4 +1,4 @@
-package ru.stray27.scontester.beanpostprocessors;
+package ru.stray27.scontester.spring.custom.beanpostprocessors;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
@@ -7,9 +7,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import org.springframework.context.ApplicationContext;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
-import ru.stray27.scontester.services.annotations.Executor;
+import ru.stray27.scontester.annotations.Executor;
 import ru.stray27.scontester.services.ExecutorService;
-import ru.stray27.scontester.services.annotations.InjectExecutors;
+import ru.stray27.scontester.annotations.InjectExecutors;
 
 import java.lang.reflect.Field;
 import java.util.*;

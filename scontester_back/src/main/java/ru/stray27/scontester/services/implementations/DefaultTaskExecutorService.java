@@ -11,12 +11,10 @@ import ru.stray27.scontester.entities.ProgrammingLanguage;
 import ru.stray27.scontester.entities.Test;
 import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.services.ExecutorService;
-import ru.stray27.scontester.services.annotations.InjectExecutors;
+import ru.stray27.scontester.annotations.InjectExecutors;
 import ru.stray27.scontester.services.TaskExecutorService;
 
 import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 

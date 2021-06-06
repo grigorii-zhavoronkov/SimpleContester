@@ -1,13 +1,13 @@
 package ru.stray27.scontester.services.implementations.executors;
 
-import org.springframework.beans.factory.annotation.Value;
+import ru.stray27.scontester.annotations.CustomProperty;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
-import ru.stray27.scontester.services.annotations.Executor;
+import ru.stray27.scontester.annotations.Executor;
 
 @Executor(language = ProgrammingLanguage.PYTHON3)
 public class Python3Executor extends Python2Executor {
 
-    @Value("${python3}")
+    @CustomProperty("executors.home.python3")
     private String runner;
 
     @Override

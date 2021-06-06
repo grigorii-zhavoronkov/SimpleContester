@@ -30,6 +30,13 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
+processResources {
+    copy {
+        from '../scontester_front/public/'
+        into 'src/main/resources/static/'
+    }
+}
+
 test {
     useJUnitPlatform()
 }

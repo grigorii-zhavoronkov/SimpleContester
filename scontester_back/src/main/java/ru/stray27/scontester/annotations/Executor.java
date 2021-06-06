@@ -1,4 +1,4 @@
-package ru.stray27.scontester.services.annotations;
+package ru.stray27.scontester.annotations;
 
 import org.springframework.stereotype.Service;
 import ru.stray27.scontester.entities.ProgrammingLanguage;

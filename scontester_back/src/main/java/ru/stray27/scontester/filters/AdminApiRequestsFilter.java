@@ -1,9 +1,9 @@
 package ru.stray27.scontester.filters;
 
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
+import ru.stray27.scontester.annotations.CustomProperty;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @Order(2)
 public class AdminApiRequestsFilter implements Filter {
 
-    @Value("${admin.password}")
+    @CustomProperty("admin.password")
     private String adminPassword;
 
     @Override

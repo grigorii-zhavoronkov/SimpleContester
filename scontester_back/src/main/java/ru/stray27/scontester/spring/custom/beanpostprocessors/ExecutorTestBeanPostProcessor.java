@@ -1,9 +1,9 @@
-package ru.stray27.scontester.beanpostprocessors;
+package ru.stray27.scontester.spring.custom.beanpostprocessors;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.BeanPostProcessor;
 import ru.stray27.scontester.services.ExecutorService;
-import ru.stray27.scontester.services.annotations.Executor;
+import ru.stray27.scontester.annotations.Executor;
 
 public class ExecutorTestBeanPostProcessor implements BeanPostProcessor {
     @Override

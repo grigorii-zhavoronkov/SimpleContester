@@ -1,11 +1,11 @@
 package ru.stray27.scontester.services.implementations.executors;
 
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
+import ru.stray27.scontester.annotations.CustomProperty;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.AttemptStatus;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
-import ru.stray27.scontester.services.annotations.Executor;
+import ru.stray27.scontester.annotations.Executor;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 @Executor(language = ProgrammingLanguage.FREE_PASCAL)
 public class FreePascalExecutor extends AbstractExecutor {
 
-    @Value("${FPC}")
+    @CustomProperty("executors.home.free-pascal")
     private String compiler;
 
     private String sourceCodeFilename;

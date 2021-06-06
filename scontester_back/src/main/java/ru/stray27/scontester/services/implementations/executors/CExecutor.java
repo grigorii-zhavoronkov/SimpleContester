@@ -1,11 +1,11 @@
 package ru.stray27.scontester.services.implementations.executors;
 
 import lombok.SneakyThrows;
-import org.springframework.beans.factory.annotation.Value;
+import ru.stray27.scontester.annotations.CustomProperty;
 import ru.stray27.scontester.entities.Attempt;
 import ru.stray27.scontester.entities.AttemptStatus;
 import ru.stray27.scontester.entities.ProgrammingLanguage;
-import ru.stray27.scontester.services.annotations.Executor;
+import ru.stray27.scontester.annotations.Executor;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -13,7 +13,7 @@ import java.nio.file.Paths;
 @Executor(language = ProgrammingLanguage.C)
 public class CExecutor extends AbstractExecutor {
 
-    @Value("${GCC}")
+    @CustomProperty("executors.home.gcc")
     private String GCC;
 
     private String srcFilename;

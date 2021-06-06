@@ -3,8 +3,8 @@ package ru.stray27.scontester.services.implementations;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.stray27.scontester.annotations.CustomProperty;
 import ru.stray27.scontester.services.ProcessBuilderService;
 
 import java.io.File;
@@ -16,7 +16,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 @Log4j2
 @Service
@@ -29,7 +28,7 @@ public class DefaultProcessBuilderService implements ProcessBuilderService {
     @Getter
     private OutputStream processOutputStream;
 
-    @Value("${test-dir}")
+    @CustomProperty("dir.test")
     protected String testDirectoryPath;
 
     private String output;

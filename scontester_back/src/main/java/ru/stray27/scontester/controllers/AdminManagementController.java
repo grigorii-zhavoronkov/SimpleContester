@@ -1,8 +1,7 @@
 package ru.stray27.scontester.controllers;
 
-import com.fasterxml.jackson.annotation.JsonView;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +17,7 @@ import ru.stray27.scontester.repositories.AttemptRepository;
 import ru.stray27.scontester.repositories.SenderRepository;
 import ru.stray27.scontester.repositories.TaskRepository;
 import ru.stray27.scontester.repositories.TestRepository;
+import ru.stray27.scontester.services.mappers.EntityConverter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,14 @@ public class AdminManagementController {
     @Autowired
     private TestRepository testRepository;
     @Autowired
-    private ModelMapper modelMapper;
+    @Qualifier("taskConverter")
+    private EntityConverter<Task, TaskDto> taskConverter;
+    @Autowired
+    @Qualifier("senderConverter")
+    private EntityConverter<Sender, SenderDto> senderConverter;
+    @Autowired
+    @Qualifier("attemptConverter")
+    private EntityConverter<Attempt, AttemptDto> attemptConverter;
 
     @GetMapping(value = "login")
     public ResponseEntity<?> login() {
@@ -60,10 +67,7 @@ public class AdminManagementController {
             Iterable<Sender> senders = senderRepository.findAll();
             List<SenderDto> dtos = new ArrayList<>();
             for (Sender sender: senders) {
-                SenderDto dto = new SenderDto();
-                dto.setUID(sender.getUID());
-                dto.setName(sender.getName());
-                dtos.add(dto);
+                dtos.add(senderConverter.convertToDto(sender));
             }
             return new ResponseEntity<>(dtos, HttpStatus.OK);
         } catch (Exception e) {
@@ -72,22 +76,20 @@ public class AdminManagementController {
     }
 
     @PostMapping(value = "createSender")
-    public ResponseEntity<?> createSender(@RequestBody Sender sender) {
+    public ResponseEntity<?> createSender(@RequestBody SenderDto senderDto) {
         try {
-            senderRepository.save(sender);
-            return new ResponseEntity<>(sender, HttpStatus.OK);
+            senderRepository.save(senderConverter.convertToEntity(senderDto));
+            return new ResponseEntity<>(senderDto, HttpStatus.OK);
         } catch (DataAccessException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
     }
 
 
-    @JsonView(TaskDto.Input.class)
     @PostMapping(value = "createTask")
     public ResponseEntity<?> createTask(@RequestBody TaskDto taskInput) {
         try {
             Task task = new Task();
-            //task.setId(taskInput.getId());
             task.setTitle(taskInput.getTitle());
             task.setDescription(taskInput.getDescription());
             task.setInputType(taskInput.getInputType());
@@ -124,14 +126,7 @@ public class AdminManagementController {
         List<Attempt> attempts = (List<Attempt>) attemptRepository.findAllOrderById().orElseThrow();
         List<AttemptDto> outputAttempts = new ArrayList<>();
         for (Attempt attempt : attempts) {
-            AttemptDto attemptOutput = new AttemptDto();
-            attemptOutput.setId(attempt.getId());
-            attemptOutput.setTaskId(attempt.getTask().getId());
-            attemptOutput.setTaskTitle(attempt.getTask().getTitle());
-            attemptOutput.setStatus(attempt.getAttemptStatus());
-            attemptOutput.setLastTestNumber(attempt.getLastTestNumber());
-            attemptOutput.setSenderName(attempt.getSender().getName());
-            outputAttempts.add(attemptOutput);
+            outputAttempts.add(attemptConverter.convertToDto(attempt));
         }
         return new ResponseEntity<>(outputAttempts, HttpStatus.OK);
     }

@@ -2,8 +2,8 @@ package ru.stray27.scontester.services.implementations;
 
 import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import ru.stray27.scontester.annotations.CustomProperty;
 import ru.stray27.scontester.services.FileManagementService;
 
 import javax.annotation.PostConstruct;
@@ -12,24 +12,19 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Arrays;
 import java.util.List;
 
 @Log4j2
 @Service
 public class DefaultFileManagementService implements FileManagementService {
 
-    @Value("${src-dir}")
+    @CustomProperty("dir.src")
     private String srcDir;
-
-    @Value("${task-dir}")
-    private String taskDir;
 
     @PostConstruct
     @SneakyThrows
     private void postConstruct() {
         Files.createDirectories(Paths.get(srcDir));
-        Files.createDirectories(Paths.get(taskDir));
     }
 
     @Override
